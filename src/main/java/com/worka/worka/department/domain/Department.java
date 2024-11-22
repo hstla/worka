@@ -1,6 +1,8 @@
 package com.worka.worka.department.domain;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -14,10 +16,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Department {
@@ -45,6 +49,11 @@ public class Department {
     private String updateBy;
     @Column(name = "deleted_at")
     private LocalDateTime deleteAt;
+
+    public static Department create(String name, Optional<Department> parentDepartment) {
+        Integer depth = parentDepartment.map(parent -> parent.getDepth() + 1).orElse(1);
+        return new Department(name, depth, parentDepartment.orElse(null));
+    }
 
     public Department(String name, Integer depth, Department parentId) {
         this.name = name;
