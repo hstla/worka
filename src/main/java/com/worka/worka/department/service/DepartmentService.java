@@ -1,10 +1,8 @@
 package com.worka.worka.department.service;
 
 import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.worka.worka.department.domain.Department;
 import com.worka.worka.department.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +17,33 @@ public class DepartmentService {
     /**
      * 부서 생성
      * 부서이름과 부모아이디를 받는다.
-     * depth는 부모아이디를 보고 결정한다.
-     * 만약 부모아이다가 null로 입력되면 최상위 부서라고 판단하고 depth를 1로 설정한다.
+     * parentId가 null 일때 최상위 부서
+     * parentId가 정상일 때 하위 부서
+     * parentId가 틀릴 때 에러처리
      */
-    public void createDepartment(String name, Long parentId) {
-        Optional<Department> parentDepartment = (parentId != null) ? departmentRepository.findByParentId(parentId) : Optional.empty();
+    public Department createDepartment(String name, Long parentId) {
+        Optional<Department> parentDepartment = (parentId != null) ? findParentDepartment(parentId) : Optional.empty();
         Department department = Department.create(name, parentDepartment);
-        departmentRepository.save(department);
+        return departmentRepository.save(department);
+    }
+
+    public Optional<Department> findParentDepartment(Long parentId) {
+        Department department = departmentRepository.findByParentId(parentId)
+            .orElseThrow(() -> new RuntimeException("부모 부서를 찾을 수 없습니다."));
+        return Optional.of(department);
+    }
+
+    /**
+     * 수정
+     * 부서이름과 부모아이디를 수정할 수 있다.
+     * 부모아이디 수정 시 depth를 다시 계산한다.
+     * if 부모아이디 null일 시 최상위 부서라 판단하고 depth를 1로 한다.
+     */
+    public void updateNameDepartment() {
+
+    }
+
+    public void updateParentIdDepartment() {
+
     }
 }
