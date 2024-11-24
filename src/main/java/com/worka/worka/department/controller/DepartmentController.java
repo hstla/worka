@@ -3,6 +3,7 @@ package com.worka.worka.department.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +28,16 @@ public class DepartmentController {
 		return ResponseEntity
 			.status(HttpStatus.CREATED)
 			.build();
+	}
+
+	@PutMapping("/departments")
+	public ResponseEntity<DepartmentResDto> update(@Valid @RequestBody DepartmentReqDto departmentReqDto) {
+
+
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.build();
+
 	}
 
 }

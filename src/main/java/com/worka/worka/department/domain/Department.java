@@ -60,4 +60,12 @@ public class Department {
         this.depth = depth;
         this.parentId = parentId;
     }
+
+    public void updateName(String updateName) {
+        this.name = updateName;
+    }
+
+    public void updateParentId(Department parentDepartment) {
+
+    }
 }

@@ -29,7 +29,7 @@ public class DepartmentService {
 
     public Optional<Department> findParentDepartment(Long parentId) {
         Department department = departmentRepository.findByParentId(parentId)
-            .orElseThrow(() -> new RuntimeException("부모 부서를 찾을 수 없습니다."));
+            .orElseThrow(() -> new RuntimeException("부모 부서를 찾을 수 없습니다. " + parentId));
         return Optional.of(department);
     }
 
@@ -39,11 +39,18 @@ public class DepartmentService {
      * 부모아이디 수정 시 depth를 다시 계산한다.
      * if 부모아이디 null일 시 최상위 부서라 판단하고 depth를 1로 한다.
      */
-    public void updateNameDepartment() {
-
+    public void updateNameDepartment(Long departmentId, String updateName) {
+        Department department = departmentRepository.findById(departmentId)
+            .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다."));
+        department.updateName(updateName);
     }
 
-    public void updateParentIdDepartment() {
+    public void updateParentIdDepartment(Long departmentId, Long parentId) {
+        Department department = departmentRepository.findById(departmentId)
+            .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다."));
+        Department parentDepartment = departmentRepository.findById(parentId)
+            .orElseThrow(() -> new RuntimeException("부모 부서를 찾을 수 없습니다. " + parentId));
 
+        department.updateParentId(parentDepartment);
     }
 }
