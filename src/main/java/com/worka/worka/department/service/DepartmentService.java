@@ -29,7 +29,7 @@ public class DepartmentService {
 
     public Optional<Department> findParentDepartment(Long parentId) {
         Department department = departmentRepository.findByParentId(parentId)
-            .orElseThrow(() -> new RuntimeException("부모 부서를 찾을 수 없습니다. " + parentId));
+            .orElseThrow(() -> new RuntimeException("상위 부서를 찾을 수 없습니다. " + parentId));
         return Optional.of(department);
     }
 
@@ -37,19 +37,20 @@ public class DepartmentService {
      * 수정
      * 부서이름과 부모아이디를 수정할 수 있다.
      * 부모아이디 수정 시 depth를 다시 계산한다.
-     * if 부모아이디 null일 시 최상위 부서라 판단하고 depth를 1로 한다.
+     * 부모아이디 null일 시 최상위 부서라 판단하고 depth를 1로 한다.
      */
-    public void updateNameDepartment(Long departmentId, String updateName) {
+    public Department updateNameDepartment(Long departmentId, String updateName) {
         Department department = departmentRepository.findById(departmentId)
-            .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다."));
+            .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다. " + departmentId));
         department.updateName(updateName);
+        return departmentRepository.save(department);
     }
 
     public void updateParentIdDepartment(Long departmentId, Long parentId) {
         Department department = departmentRepository.findById(departmentId)
-            .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다."));
+            .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다. " + departmentId));
         Department parentDepartment = departmentRepository.findById(parentId)
-            .orElseThrow(() -> new RuntimeException("부모 부서를 찾을 수 없습니다. " + parentId));
+            .orElseThrow(() -> new RuntimeException("상위 부서를 찾을 수 없습니다. " + parentId));
 
         department.updateParentId(parentDepartment);
     }

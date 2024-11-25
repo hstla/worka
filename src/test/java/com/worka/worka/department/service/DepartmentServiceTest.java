@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -51,5 +52,21 @@ class DepartmentServiceTest {
 		assertThatThrownBy(() -> departmentService.createDepartment("testName", invalidParentId))
 			.isInstanceOf(RuntimeException.class)
 			.hasMessage("부모 부서를 찾을 수 없습니다.");
+	}
+
+	@Test
+	@DisplayName("부서의 이름을 수정한다.")
+	public void updateNameDepartment () throws Exception {
+		//given
+		Long parentId = 1L;
+		Department testDepartment = Department.create("test1", Optional.empty());
+		BDDMockito.given(departmentRepository.findById(parentId))
+			.willReturn(Optional.of(testDepartment));
+
+		// when
+		departmentService.updateNameDepartment(parentId,"test2");
+
+		// then
+		assertThat(testDepartment.getName()).isEqualTo("test2");
 	}
 }
