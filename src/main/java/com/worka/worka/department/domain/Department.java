@@ -3,6 +3,10 @@ package com.worka.worka.department.domain;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -24,6 +28,9 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@SQLDelete(sql = "UPDATE department SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@FilterDef(name = "deletedFilter", parameters = @ParamDef(name = "deletedAt", type = LocalDateTime.class))
+@Filter(name = "deletedFilter", condition = "deleted_at IS NULL")
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
