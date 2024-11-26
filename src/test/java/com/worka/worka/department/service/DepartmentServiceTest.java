@@ -28,7 +28,7 @@ class DepartmentServiceTest {
 	@DisplayName("최상위 부서 생성에 성공한다.")
 	public void createDepartment () {
 	    //given
-		Department expectedDepartment = new Department("testName", 1, null);
+		Department expectedDepartment = Department.create("testName", Optional.empty());;
 		given(departmentRepository.save(any(Department.class)))
 			.willReturn(expectedDepartment);
 
@@ -85,20 +85,33 @@ class DepartmentServiceTest {
 	}
 
 	@Test
-	@DisplayName("상위 부서를 수정에 성공한다.")
-	public void updateParentIdDepartment () throws Exception {
-		//given
-		Long departmentId = 1L;
-		Long parentDepartmentId = 2L;
-		Department department = Department.create("test1", Optional.empty());
-		given(departmentRepository.findById(departmentId)).willReturn(Optional.of(department));
-		given(departmentRepository.findById(parentDepartmentId)).willReturn(Optional.empty());
+	@DisplayName("상위 부서 수정에 성공한다.")
+	public void updateParentIdDepartment() throws Exception {
+		// given
+		Department parentDepartment1 = Department.testCreate(1L, "parent1", Optional.empty());
+		Department parentDepartment2 = Department.testCreate(2L, "parent2", Optional.empty());
+		Department testDepartment = Department.testCreate(3L, "child", Optional.of(parentDepartment1));
+		given(departmentRepository.findById(testDepartment.getId())).willReturn(Optional.of(testDepartment));
+		given(departmentRepository.findById(parentDepartment2.getId())).willReturn(Optional.of(parentDepartment2));
+		given(departmentRepository.save(any(Department.class))).willReturn(testDepartment);
+
+		// when
+		Department department = departmentService.updateParentDepartment(testDepartment.getId(), Optional.ofNullable(parentDepartment2.getId()));
+
+		// then
+		assertThat(department.getParentDepartment().getName()).isEqualTo("parent2");
+	}
+
+	@Test
+	@DisplayName("상위 부서를 자기 자신으로 설정하여 테스트에 실패한다.")
+	public void updateParentIdDepartmentException() throws Exception {
+		// given
+		Department testDepartment = Department.testCreate(1L, "child", Optional.empty());
+		given(departmentRepository.findById(testDepartment.getId())).willReturn(Optional.of(testDepartment));
 
 		// when then
-		departmentService.updateParentDepartment(departmentId, Optional.empty());
-
-		assertThatThrownBy(() -> departmentService.updateNameDepartment(departmentId,"test2"))
+		assertThatThrownBy(() -> departmentService.updateParentDepartment(testDepartment.getId(), Optional.of(testDepartment.getId())))
 			.isInstanceOf(RuntimeException.class)
-			.hasMessage("부서를 찾을 수 없습니다. " + departmentId);
+			.hasMessage("부서는 자기 자신을 부모로 설정할 수 없습니다.");
 	}
 }

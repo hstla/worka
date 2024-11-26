@@ -55,18 +55,33 @@ public class Department {
         return new Department(name, depth, parentDepartment.orElse(null));
     }
 
-    public Department(String name, Integer depth, Department parentId) {
+    public static Department testCreate(Long id, String name, Optional<Department> parentDepartment) {
+        Integer depth = parentDepartment.map(parent -> parent.getDepth() + 1).orElse(1);
+        return new Department(id, name, depth, parentDepartment.orElse(null));
+    }
+
+    private Department(String name, Integer depth, Department parent) {
         this.name = name;
         this.depth = depth;
-        this.parentDepartment = parentId;
+        this.parentDepartment = parent;
+    }
+
+    private Department(Long id, String name, Integer depth, Department parent) {
+        this.id = id;
+        this.name = name;
+        this.depth = depth;
+        this.parentDepartment = parent;
     }
 
     public void updateName(String updateName) {
         this.name = updateName;
     }
 
-    public void updateParentId(Optional<Department> parentDepartment) {
-        this.depth = parentDepartment.map(Department::getDepth).orElse(1);
+    public void updateParentDepartment(Optional<Department> parentDepartment) {
+        parentDepartment.filter(department -> !this.getId().equals(department.getId()))
+            .orElseThrow(() -> new RuntimeException("부서는 자기 자신을 부모로 설정할 수 없습니다."));
+
+        this.depth = parentDepartment.map(department -> department.getDepth() + 1).orElse(1);
         this.parentDepartment = parentDepartment.orElse(null);
     }
 }

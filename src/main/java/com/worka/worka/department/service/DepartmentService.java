@@ -53,7 +53,7 @@ public class DepartmentService {
             .orElseThrow(() -> new RuntimeException("상위 부서를 찾을 수 없습니다. " + id)))
             .or(() -> Optional.empty());
 
-        department.updateParentId(parentDepartment);
+        department.updateParentDepartment(parentDepartment);
         return departmentRepository.save(department);
     }
 }
