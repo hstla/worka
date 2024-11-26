@@ -46,12 +46,14 @@ public class DepartmentService {
         return departmentRepository.save(department);
     }
 
-    public void updateParentIdDepartment(Long departmentId, Long parentId) {
+    public Department updateParentDepartment(Long departmentId, Optional<Long> parentId) {
         Department department = departmentRepository.findById(departmentId)
             .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다. " + departmentId));
-        Department parentDepartment = departmentRepository.findById(parentId)
-            .orElseThrow(() -> new RuntimeException("상위 부서를 찾을 수 없습니다. " + parentId));
+        Optional<Department> parentDepartment = parentId.map(id -> departmentRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("상위 부서를 찾을 수 없습니다. " + id)))
+            .or(() -> Optional.empty());
 
         department.updateParentId(parentDepartment);
+        return departmentRepository.save(department);
     }
 }

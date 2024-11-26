@@ -34,7 +34,7 @@ public class Department {
     private Integer depth;
     @OneToOne
     @JoinColumn(name = "parent_id")
-    private Department parentId;
+    private Department parentDepartment;
     @CreatedDate
 	@Column(name = "created_at", updatable = false)
     private LocalDateTime createAt;
@@ -58,14 +58,15 @@ public class Department {
     public Department(String name, Integer depth, Department parentId) {
         this.name = name;
         this.depth = depth;
-        this.parentId = parentId;
+        this.parentDepartment = parentId;
     }
 
     public void updateName(String updateName) {
         this.name = updateName;
     }
 
-    public void updateParentId(Department parentDepartment) {
-
+    public void updateParentId(Optional<Department> parentDepartment) {
+        this.depth = parentDepartment.map(Department::getDepth).orElse(1);
+        this.parentDepartment = parentDepartment.orElse(null);
     }
 }
