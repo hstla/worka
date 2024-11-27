@@ -19,7 +19,7 @@ public class DepartmentQueryService {
 	/**
 	 * 부서 읽기
 	 * 1. 모든 부서를 읽어온다.
-	 * 2. 부서아이디를 받으면 밑에 있는 부서까지 다 읽어온다. 무한루프 주의
+	 * 2. 부서아이디를 받으면 밑에 있는 부서까지 다 읽어온다.
 	 */
 	public List<DepartmentReadResDto> readAllDepartment() {
 		List<Department> topDepthDepartments = departmentRepository.findTopDepthDepartments();
@@ -29,6 +29,13 @@ public class DepartmentQueryService {
 			.collect(Collectors.toList());
 	}
 
+	public List<DepartmentReadResDto> readDepartment(Long departmentId) {
+		Department department = departmentRepository.findById(departmentId)
+			.orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다. " + departmentId));
+		List<Department> departmentWithChildren = departmentRepository.findDepartmentWithChildren(department.getId());
 
-
+		return departmentWithChildren.stream()
+			.map(DepartmentReadResDto::new)
+			.collect(Collectors.toList());
+	}
 }

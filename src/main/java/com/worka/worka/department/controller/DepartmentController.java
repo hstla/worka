@@ -73,8 +73,7 @@ public class DepartmentController {
 
 	@GetMapping("/departments/{departmentId}")
 	public ResponseEntity<List<DepartmentReadResDto>> getAllDepartment(@RequestParam  Long departmentId) {
-
-		List<DepartmentReadResDto> AllDepartment = departmentQueryService.readAllDepartment();
+		List<DepartmentReadResDto> AllDepartment = departmentQueryService.readDepartment(departmentId);
 		return ResponseEntity
 			.status(HttpStatus.OK)
 			.body(AllDepartment);

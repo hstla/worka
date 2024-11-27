@@ -11,9 +11,13 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
 
 	Optional<Department> findByParentId(Long parentId);
 
-
 	boolean existsByParentDepartment(Long parentId);
 
-	@Query("SELECT d FROM Department d WHERE d.parentDepartment IS NULL")
+	@Query("SELECT d FROM Department d " +
+		"LEFT JOIN FETCH d.children " +
+		"WHERE d.parentDepartment IS NULL")
 	List<Department> findTopDepthDepartments();
+
+	@Query("SELECT d FROM Department d WHERE d.parentDepartment IS NULL")
+	List<Department> findDepartmentWithChildren(Long departmentId);
 }
