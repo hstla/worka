@@ -62,7 +62,7 @@ public class DepartmentService {
      * 자식이 있으면 삭제하면 안된다.
      */
     public void deleteDepartment(Long departmentId) {
-        Department department = departmentRepository.findById(departmentId)
+        departmentRepository.findById(departmentId)
             .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다. " + departmentId));
 
         if (departmentRepository.existsByParentDepartment(departmentId)) {
