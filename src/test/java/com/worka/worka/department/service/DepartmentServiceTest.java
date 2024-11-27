@@ -114,4 +114,19 @@ class DepartmentServiceTest {
 			.isInstanceOf(RuntimeException.class)
 			.hasMessage("부서는 자기 자신을 부모로 설정할 수 없습니다.");
 	}
+
+	@Test
+	@DisplayName("부서 삭제에 성공한다.")
+	public void deleteDepartment() throws Exception {
+		// given
+		Department deleteDepartment = Department.testCreate(1L, "child", Optional.empty());
+		given(departmentRepository.findById(deleteDepartment.getId())).willReturn(Optional.of(deleteDepartment));
+		given(departmentRepository.existsByParentDepartment(deleteDepartment.getId())).willReturn(false);
+
+		// when
+		departmentService.deleteDepartment(deleteDepartment.getId());
+
+		// then
+		verify(departmentRepository).deleteById(deleteDepartment.getId());
+	}
 }
