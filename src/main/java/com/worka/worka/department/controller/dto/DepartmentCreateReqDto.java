@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class DepartmentReqDto {
+public class DepartmentCreateReqDto {
 	@NotNull
 	private String name;
 	private Long parentId;
 
-	public DepartmentReqDto(String name, Long parentId) {
+	public DepartmentCreateReqDto(String name, Long parentId) {
 		this.name = name;
 		this.parentId = parentId;
 	}
