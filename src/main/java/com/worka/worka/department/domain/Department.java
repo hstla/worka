@@ -9,6 +9,7 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -39,6 +40,7 @@ import jakarta.validation.constraints.NotNull;
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JoinColumn(name = "department_id")
     private Long id;
     @NotNull
     private String name;
@@ -47,7 +49,7 @@ public class Department {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Department parentDepartment;
-    @OneToMany(mappedBy = "parentDepartment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentDepartment")
     private List<Department> children = new ArrayList<>();
     @CreatedDate
 	@Column(name = "created_at", updatable = false)

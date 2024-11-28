@@ -43,7 +43,7 @@ public class DepartmentService {
         Department department = departmentRepository.findById(departmentId)
             .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다. " + departmentId));
         department.updateName(updateName);
-        return departmentRepository.save(department);
+        return department;
     }
 
     public Department updateParentDepartment(Long departmentId, Optional<Long> parentId) {
@@ -54,7 +54,7 @@ public class DepartmentService {
             .or(() -> Optional.empty());
 
         department.updateParentDepartment(parentDepartment);
-        return departmentRepository.save(department);
+        return department;
     }
 
     /**
