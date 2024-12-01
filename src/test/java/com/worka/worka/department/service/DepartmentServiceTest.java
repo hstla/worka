@@ -88,12 +88,11 @@ class DepartmentServiceTest {
 	@DisplayName("상위 부서 수정에 성공한다.")
 	public void updateParentIdDepartment() throws Exception {
 		// given
-		Department parentDepartment1 = Department.testCreate(1L, "parent1", Optional.empty());
-		Department parentDepartment2 = Department.testCreate(2L, "parent2", Optional.empty());
-		Department testDepartment = Department.testCreate(3L, "child", Optional.of(parentDepartment1));
+		Department parentDepartment1 = new Department(1L, "parent1", 1,null);
+		Department parentDepartment2 = new Department(2L, "parent2", 1, null);
+		Department testDepartment = new Department(3L, "child", 2, parentDepartment1);
 		given(departmentRepository.findById(testDepartment.getId())).willReturn(Optional.of(testDepartment));
 		given(departmentRepository.findById(parentDepartment2.getId())).willReturn(Optional.of(parentDepartment2));
-		given(departmentRepository.save(any(Department.class))).willReturn(testDepartment);
 
 		// when
 		Department department = departmentService.updateParentDepartment(testDepartment.getId(), Optional.ofNullable(parentDepartment2.getId()));
@@ -106,7 +105,7 @@ class DepartmentServiceTest {
 	@DisplayName("상위 부서를 자기 자신으로 설정하여 테스트에 실패한다.")
 	public void updateParentIdDepartmentException() throws Exception {
 		// given
-		Department testDepartment = Department.testCreate(1L, "child", Optional.empty());
+		Department testDepartment = new Department(1L, "child", 1, null);
 		given(departmentRepository.findById(testDepartment.getId())).willReturn(Optional.of(testDepartment));
 
 		// when then
@@ -119,7 +118,7 @@ class DepartmentServiceTest {
 	@DisplayName("부서 삭제에 성공한다.")
 	public void deleteDepartment() throws Exception {
 		// given
-		Department deleteDepartment = Department.testCreate(1L, "child", Optional.empty());
+		Department deleteDepartment = new Department(1L, "child", 1, null);
 		given(departmentRepository.findById(deleteDepartment.getId())).willReturn(Optional.of(deleteDepartment));
 		given(departmentRepository.existsByParentDepartment(deleteDepartment.getId())).willReturn(false);
 
