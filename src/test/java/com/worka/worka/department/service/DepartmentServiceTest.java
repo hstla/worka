@@ -95,7 +95,7 @@ class DepartmentServiceTest {
 		given(departmentRepository.findById(parentDepartment2.getId())).willReturn(Optional.of(parentDepartment2));
 
 		// when
-		Department department = departmentService.updateParentDepartment(testDepartment.getId(), Optional.ofNullable(parentDepartment2.getId()));
+		Department department = departmentService.updateParentDepartment(testDepartment.getId(), parentDepartment2.getId());
 
 		// then
 		assertThat(department.getParentDepartment().getName()).isEqualTo("parent2");
@@ -109,7 +109,7 @@ class DepartmentServiceTest {
 		given(departmentRepository.findById(testDepartment.getId())).willReturn(Optional.of(testDepartment));
 
 		// when then
-		assertThatThrownBy(() -> departmentService.updateParentDepartment(testDepartment.getId(), Optional.of(testDepartment.getId())))
+		assertThatThrownBy(() -> departmentService.updateParentDepartment(testDepartment.getId(), testDepartment.getId()))
 			.isInstanceOf(RuntimeException.class)
 			.hasMessage("부서는 자기 자신을 부모로 설정할 수 없습니다.");
 	}

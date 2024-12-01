@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DepartmentParentPutReqDto {
     Long departmentId;
-    Optional<Long> parentId;
+    Long parentId;
 
 }

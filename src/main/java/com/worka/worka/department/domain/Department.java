@@ -85,11 +85,21 @@ public class Department {
         this.name = updateName;
     }
 
-    public void updateParentDepartment(Optional<Department> parentDepartment) {
-        parentDepartment.filter(department -> !this.getId().equals(department.getId()))
-            .orElseThrow(() -> new RuntimeException("부서는 자기 자신을 부모로 설정할 수 없습니다."));
+    // null 일때
+    public void updateParentDepartment(Department parentDepartment) {
+        if (isSelfParent(parentDepartment)) {
+            throw new RuntimeException("부서는 자기 자신을 부모로 설정할 수 없습니다.");
+        }
 
-        this.depth = parentDepartment.map(department -> department.getDepth() + 1).orElse(1);
-        this.parentDepartment = parentDepartment.orElse(null);
+        this.parentDepartment = parentDepartment;
+        this.depth = calculateDepth(parentDepartment);
+    }
+
+    private boolean isSelfParent(Department parentDepartment) {
+        return parentDepartment != null && parentDepartment.getId().equals(this.getId());
+    }
+
+    private Integer calculateDepth (Department parentDepartment) {
+        return parentDepartment == null ? 1 : parentDepartment.getDepth() + 1;
     }
 }
