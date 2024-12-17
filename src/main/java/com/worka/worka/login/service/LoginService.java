@@ -23,6 +23,7 @@ public class LoginService implements LoginInfoCommandPort, LoginInfoInquiryPort 
         return loginInfo;
     }
 
+    @Transactional(readOnly = true)
     public LoginInfo getByLoginId(String loginId) {
         return loginInfoOutPort.getByLoginId(loginId);
     }
