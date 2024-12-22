@@ -45,4 +45,12 @@ public class User {
 		this.name = name;
 		this.gender = gender;
 	}
+
+	public void updateName(String updateName) {
+		this.name = updateName;
+	}
+
+	public void updateGender(Gender gender) {
+		this.gender = gender;
+	}
 }

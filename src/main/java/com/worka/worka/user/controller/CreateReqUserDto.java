@@ -2,7 +2,6 @@ package com.worka.worka.user.controller;
 
 import com.worka.worka.user.domain.Gender;
 
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateReqUser {
+public class CreateReqUserDto {
 	private String name;
 	private Gender gender;
 }

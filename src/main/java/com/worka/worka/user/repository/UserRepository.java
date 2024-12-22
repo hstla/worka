@@ -6,4 +6,5 @@ import com.worka.worka.user.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+	public boolean existsByName(String name);
 }
