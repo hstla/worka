@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateReqUserDto {
+public class ModifyReqUserDto {
 	private String name;
 	private Gender gender;
 }

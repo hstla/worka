@@ -46,11 +46,8 @@ public class User {
 		this.gender = gender;
 	}
 
-	public void updateName(String updateName) {
+	public void updateUser(String updateName, Gender gender) {
 		this.name = updateName;
-	}
-
-	public void updateGender(Gender gender) {
 		this.gender = gender;
 	}
 }

@@ -1,7 +1,5 @@
 package com.worka.worka.user.service;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +12,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserServiceImpl extends UserService {
+public class UserServiceImpl implements CreateUserService, ModifyUserService {
 	private final UserRepository userRepository;
 
-	// todo name 중복 검증하기.
 	@Override
 	public Long createUser(String name, Gender gender) {
 		if (userRepository.existsByName(name)) {
@@ -29,19 +26,16 @@ public class UserServiceImpl extends UserService {
 		return saveUser.getId();
 	}
 
-	// 수정 성별, 이름 변경하기.
-	public void updateName(Long userId, String updateName) {
+	// 수정 성별, 이름 한번에 변경하기.
+	@Override
+	public void updateUser(Long userId, String updateName, Gender gender) {
 		User findById = userRepository.getReferenceById(userId);
-		findById.updateName(updateName);
-	}
-
-	public void updateGender(Long userId, Gender gender) {
-		User findById = userRepository.getReferenceById(userId);
-		findById.updateGender(gender);
+		findById.updateUser(updateName, gender);
 	}
 
 	// 삭제 아이디로 삭제
-	public void deleteUser(Long userId) {
+	@Override
+	public void deletedUser(Long userId) {
 		// User findById = userRepository.getReferenceById(userId);
 		userRepository.deleteById(userId);
 	}
